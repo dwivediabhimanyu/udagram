@@ -17,6 +17,9 @@ jobs:
       install:
         - docker-compose -f docker-compose.yaml build --parallel
         - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+        # Tagging and pushing reverse proxy
+        - docker tag reverse-proxy abhimanyudwivedi/udagram-rp:latest
+        - docker push abhimanyudwivedi/udagram-rp:latest
         # Tagging and pushing frontend
         - docker tag frontend abhimanyudwivedi/udagram-frontend:latest
         - docker push abhimanyudwivedi/udagram-frontend:latest
@@ -27,16 +30,5 @@ jobs:
         - docker tag udagram-api-feed abhimanyudwivedi/udagram-api-feed:latest
         - docker push abhimanyudwivedi/udagram-api-feed:latest
     - stage: deploy
-      before_script:
-        - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-        - chmod +x ./kubectl
-        - sudo mv ./kubectl /usr/local/bin/kubectl
-        - echo $KUBEFILE | base64 -d > KUBECONFIG.yaml
-        - cat KUBECONFIG.yaml
-        - export KUBECONFIG=$PWD/KUBECONFIG.yaml
-        - echo $CONFIGMAP_FILE | base64 -d > configmap.properties
-        - cat configmap.properties
-        - echo $SECRET_FILE | base64 > secret.properties
-        - cat secret.properties
       script:
         - echo "All done for now"
