@@ -15,7 +15,7 @@ jobs:
         - chmod +x ./kubectl
         - sudo mv ./kubectl /usr/local/bin/kubectl
       install:
-        - docker-compose -f docker-compose-build.yaml build --parallel
+        - docker-compose -f docker-compose.yaml build --parallel
         - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
         # Tagging and pushing frontend
         - docker tag frontend abhimanyudwivedi/udagram-frontend:latest
