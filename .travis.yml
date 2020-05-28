@@ -1,0 +1,43 @@
+language: minimal
+services: docker
+env:
+  - DOCKER_COMPOSE_VERSION=1.23.2
+jobs:
+  include:
+    - stage: build
+      if: tag IS present
+      before_install:
+        - docker -v && docker-compose -v
+        - sudo rm /usr/local/bin/docker-compose
+        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - sudo mv docker-compose /usr/local/bin
+        - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        - chmod +x ./kubectl
+        - sudo mv ./kubectl /usr/local/bin/kubectl
+      install:
+        - docker-compose -f docker-compose-build.yaml build --parallel
+        - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+        # Tagging and pushing frontend
+        - docker tag frontend abhimanyudwivedi/udagram-frontend:latest
+        - docker push abhimanyudwivedi/udagram-frontend:latest
+        # Tagging and pushing udagram-api-user
+        - docker tag frontend abhimanyudwivedi/udagram-api-user:latest
+        - docker push abhimanyudwivedi/udagram-api-user:latest
+        # Tagging and pushing udagram-api-feed
+        - docker tag frontend abhimanyudwivedi/udagram-api-feed:latest
+        - docker push abhimanyudwivedi/udagram-api-feed:latest
+    - stage: deploy
+      before_script:
+        - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        - chmod +x ./kubectl
+        - sudo mv ./kubectl /usr/local/bin/kubectl
+        - echo $KUBEFILE | base64 -d > KUBECONFIG.yaml
+        - cat KUBECONFIG.yaml
+        - export KUBECONFIG=$PWD/KUBECONFIG.yaml
+        - echo $CONFIGMAP_FILE | base64 -d > configmap.properties
+        - cat configmap.properties
+        - echo $SECRET_FILE | base64 > secret.properties
+        - cat secret.properties
+      script:
+        - echo "All done for now"
