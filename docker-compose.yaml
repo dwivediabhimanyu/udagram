@@ -3,7 +3,7 @@ version: "3"
 services:
   reverseproxy:
     build:
-      context: udagram-rp
+      context: reverse-proxy
     image: abhimanyudwivedi/udagram-rp
   api_user:
     build:
