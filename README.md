@@ -1,4 +1,4 @@
-![GitHub Logo](https://travis-ci.com/dwivediabhimanyu/udagram.svg?branch=master)
+[![Build Status](https://travis-ci.com/dwivediabhimanyu/udagram.svg?branch=master)](https://travis-ci.com/dwivediabhimanyu/udagram)
 
 # Udagram Image Filtering Application
 
