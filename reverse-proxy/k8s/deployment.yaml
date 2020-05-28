@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reverseproxy
+  name: reverse-proxy
 spec:
   selector:
     matchLabels:
-      app: reverseproxy
+      app: reverse-proxy
 
   template:
     metadata:
       labels:
-        app: reverseproxy
+        app: reverse-proxy
 
     spec:
       containers:
-        - name: reverseproxy
-
+        - name: reverse-proxy
           image: abhimanyudwivedi/udagram-rp
           resources:
             limits:
