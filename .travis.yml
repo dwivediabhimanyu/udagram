@@ -5,7 +5,6 @@ env:
 jobs:
   include:
     - stage: build
-      if: tag IS present
       before_install:
         - docker -v && docker-compose -v
         - sudo rm /usr/local/bin/docker-compose
