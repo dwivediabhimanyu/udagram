@@ -15,15 +15,16 @@ jobs:
         - chmod +x ./kubectl
         - sudo mv ./kubectl /usr/local/bin/kubectl
       install:
+        - docker-compose -f docker-compose-build.yaml build --parallel
         - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
         # Tagging and pushing frontend
         - docker tag frontend abhimanyudwivedi/udagram-frontend:latest
         - docker push abhimanyudwivedi/udagram-frontend:latest
         # Tagging and pushing udagram-api-user
-        - docker tag frontend abhimanyudwivedi/udagram-api-user:latest
+        - docker tag udagram-api-user abhimanyudwivedi/udagram-api-user:latest
         - docker push abhimanyudwivedi/udagram-api-user:latest
         # Tagging and pushing udagram-api-feed
-        - docker tag frontend abhimanyudwivedi/udagram-api-feed:latest
+        - docker tag udagram-api-feed abhimanyudwivedi/udagram-api-feed:latest
         - docker push abhimanyudwivedi/udagram-api-feed:latest
     - stage: deploy
       before_script:
